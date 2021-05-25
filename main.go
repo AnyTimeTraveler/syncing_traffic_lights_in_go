@@ -37,7 +37,7 @@ func main() {
 		go lights[i].run(NSAxis)
 	}
 
-	time.Sleep(5_000_000)
+	time.Sleep(10 * time.Millisecond)
 }
 
 func (t *TrafficLight) run(activeAxis Axis) {
