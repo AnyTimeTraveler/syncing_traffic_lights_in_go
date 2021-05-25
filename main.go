@@ -6,18 +6,24 @@ import (
 )
 
 type TrafficLight struct {
-	controlChannel chan int
-	syncChannel    chan int
+	controlChannel chan bool
+	syncChannel    chan bool
 	cd             CardinalDirection
 	c              Colour
 }
 
+func debug(format string, args ...interface{}) {
+	if Debug {
+		fmt.Printf(format, args)
+	}
+}
+
 const CardinalDirections = 4
-const Debug = false
+const Debug = true
 
 func main() {
-	c := make(chan int)
-	syncChannels := [CardinalDirections / 2]chan int{make(chan int), make(chan int)}
+	c := make(chan bool)
+	syncChannels := [CardinalDirections / 2]chan bool{make(chan bool), make(chan bool)}
 	lights := [CardinalDirections]TrafficLight{}
 	for i := 0; i < CardinalDirections; i++ {
 		lights[i] = TrafficLight{
@@ -38,20 +44,14 @@ func (t *TrafficLight) run(activeAxis Axis) {
 	for {
 		if t.cd.axis() == activeAxis {
 			t.cycle()
-			if Debug {
-				fmt.Printf("\t\t\t\t\t\t\t\t\t[%s] Giving up control!\n", t.cd.toString())
-			}
-			t.controlChannel <- 0
+			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting to give up control...\n", t.cd.toString())
+			t.controlChannel <- true
+			debug("\t\t\t\t\t\t\t\t\t[%s] Given up control!\n", t.cd.toString())
 			t.sync()
 		} else {
-			if Debug {
-				fmt.Printf("\t\t\t\t\t\t\t\t\t[%s] Waiting for control...\n", t.cd.toString())
-			}
+			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting for control...\n", t.cd.toString())
 			<-t.controlChannel
-			if Debug {
-				fmt.Printf("\t\t\t\t\t\t\t\t\t[%s] Got control!\n", t.cd.toString())
-			}
-			t.sync()
+			debug("\t\t\t\t\t\t\t\t\t[%s] Got control!\n", t.cd.toString())
 		}
 		activeAxis = activeAxis.next()
 	}
@@ -73,21 +73,13 @@ func (t *TrafficLight) show() {
 }
 
 func (t *TrafficLight) sync() {
-	if t.cd/2 == 0 {
-		if Debug {
-			fmt.Printf("\t\t\t\t[%s] Syncing A...\n", t.cd.toString())
+	select {
+	case msg := <-t.syncChannel:
+		if !msg {
+			println("AAA")
 		}
-		t.syncChannel <- 0
-		if Debug {
-			fmt.Printf("\t\t\t\t[%s] Synced A!\n", t.cd.toString())
-		}
-	} else {
-		if Debug {
-			fmt.Printf("\t\t\t\t[%s] Syncing B...\n", t.cd.toString())
-		}
-		<-t.syncChannel
-		if Debug {
-			fmt.Printf("\t\t\t\t[%s] Synced B!\n", t.cd.toString())
-		}
+		debug("\t\t\t\t[%s] Synced!\n", t.cd.toString())
+	case t.syncChannel <- true:
+		debug("\t\t\t\t[%s] Syncing...\n", t.cd.toString())
 	}
 }
