@@ -19,7 +19,7 @@ func debug(format string, args ...interface{}) {
 }
 
 const CardinalDirections = 4
-const Debug = true
+const Debug = false
 
 func main() {
 	c := make(chan bool)
@@ -37,21 +37,21 @@ func main() {
 		go lights[i].run(NSAxis)
 	}
 
-	time.Sleep(1_000_000)
+	time.Sleep(5_000_000)
 }
 
 func (t *TrafficLight) run(activeAxis Axis) {
 	for {
 		if t.cd.axis() == activeAxis {
 			t.cycle()
-			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting to give up control...\n", t.cd.toString())
+			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting to give up control...\n", t.cd)
 			t.controlChannel <- true
-			debug("\t\t\t\t\t\t\t\t\t[%s] Given up control!\n", t.cd.toString())
+			debug("\t\t\t\t\t\t\t\t\t[%s] Given up control!\n", t.cd)
 			t.sync()
 		} else {
-			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting for control...\n", t.cd.toString())
+			debug("\t\t\t\t\t\t\t\t\t[%s] Waiting for control...\n", t.cd)
 			<-t.controlChannel
-			debug("\t\t\t\t\t\t\t\t\t[%s] Got control!\n", t.cd.toString())
+			debug("\t\t\t\t\t\t\t\t\t[%s] Got control!\n", t.cd)
 		}
 		activeAxis = activeAxis.next()
 	}
@@ -69,17 +69,17 @@ func (t *TrafficLight) cycle() {
 }
 
 func (t *TrafficLight) show() {
-	fmt.Printf("[%s] is %s\n", t.cd.toString(), t.c.toString())
+	fmt.Printf("[%s] is %s\n", t.cd, t.c)
 }
 
 func (t *TrafficLight) sync() {
 	select {
 	case msg := <-t.syncChannel:
 		if !msg {
-			println("AAA")
+			println("This should never happen")
 		}
-		debug("\t\t\t\t[%s] Synced!\n", t.cd.toString())
+		debug("\t\t\t\t[%s] Synced!\n", t.cd)
 	case t.syncChannel <- true:
-		debug("\t\t\t\t[%s] Syncing...\n", t.cd.toString())
+		debug("\t\t\t\t[%s] Syncing...\n", t.cd)
 	}
 }

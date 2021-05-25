@@ -22,11 +22,11 @@ func (c *Colour) next() {
 		*c = Red
 		return
 	}
-	fmt.Printf("Unexpected: %s", c.toString())
+	fmt.Printf("Unexpected: %s", c)
 	panic("UNREACHABLE")
 }
 
-func (c Colour) toString() string {
+func (c Colour) String() string {
 	switch c {
 	case Red:
 		return "   \u001B[1;31mRed\u001B[0m"
@@ -35,7 +35,7 @@ func (c Colour) toString() string {
 	case Yellow:
 		return "\u001B[1;33mYellow\u001B[0m"
 	}
-	fmt.Printf("Unexpected: %v", c)
+	fmt.Printf("Unexpected: %d", c)
 	panic("UNREACHABLE")
 	return "Red"
 }

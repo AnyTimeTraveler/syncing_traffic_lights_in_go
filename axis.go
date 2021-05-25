@@ -16,19 +16,19 @@ func (a Axis) next() Axis {
 	case EWAxis:
 		return NSAxis
 	}
-	fmt.Printf("Unexpected: %s", a.toString())
+	fmt.Printf("Unexpected: %s", a)
 	panic("UNREACHABLE")
 	return NSAxis
 }
 
-func (a Axis) toString() string {
+func (a Axis) String() string {
 	switch a {
 	case NSAxis:
 		return "NSAxis"
 	case EWAxis:
 		return "EWAxis"
 	}
-	fmt.Printf("Unexpected: %v", a)
+	fmt.Printf("Unexpected: %d", a)
 	panic("UNREACHABLE")
 	return "NSAxis"
 }

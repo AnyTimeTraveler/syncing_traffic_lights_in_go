@@ -5,7 +5,7 @@ import "fmt"
 type CardinalDirection int
 
 const (
-	North CardinalDirection = 0
+	North CardinalDirection = iota
 	East                    = 1
 	South                   = 2
 	West                    = 3
@@ -37,12 +37,12 @@ func (cd CardinalDirection) axis() Axis {
 	case West:
 		return EWAxis
 	}
-	fmt.Printf("Unexpected: %s", cd.toString())
+	fmt.Printf("Unexpected: %s", cd)
 	panic("UNREACHABLE")
 	return NSAxis
 }
 
-func (cd CardinalDirection) toString() string {
+func (cd CardinalDirection) String() string {
 	switch cd {
 	case North:
 		return "\u001B[1;34mNorth\u001B[0m"
@@ -53,7 +53,7 @@ func (cd CardinalDirection) toString() string {
 	case West:
 		return "\u001B[1;37mWest \u001B[0m"
 	}
-	fmt.Printf("Unexpected: %v", cd)
+	fmt.Printf("Unexpected: %d", cd)
 	panic("UNREACHABLE")
 	return "North"
 }
