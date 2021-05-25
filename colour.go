@@ -29,9 +29,9 @@ func (c *Colour) next() {
 func (c Colour) toString() string {
 	switch c {
 	case Red:
-		return "\u001B[1;31mRed\u001B[0m"
+		return "   \u001B[1;31mRed\u001B[0m"
 	case Green:
-		return "\u001B[1;32mGreen\u001B[0m"
+		return " \u001B[1;32mGreen\u001B[0m"
 	case Yellow:
 		return "\u001B[1;33mYellow\u001B[0m"
 	}
