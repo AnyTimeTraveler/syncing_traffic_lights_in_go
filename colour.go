@@ -37,5 +37,4 @@ func (c Colour) String() string {
 	}
 	fmt.Printf("Unexpected: %d", c)
 	panic("UNREACHABLE")
-	return "Red"
 }

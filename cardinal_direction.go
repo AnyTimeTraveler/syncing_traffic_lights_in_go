@@ -11,21 +11,6 @@ const (
 	West                    = 3
 )
 
-func (cd CardinalDirection) next() CardinalDirection {
-	switch cd {
-	case North:
-		return East
-	case East:
-		return South
-	case South:
-		return West
-	case West:
-		return North
-	}
-	panic("UNREACHABLE")
-	return North
-}
-
 func (cd CardinalDirection) axis() Axis {
 	switch cd {
 	case North:
@@ -39,7 +24,6 @@ func (cd CardinalDirection) axis() Axis {
 	}
 	fmt.Printf("Unexpected: %s", cd)
 	panic("UNREACHABLE")
-	return NSAxis
 }
 
 func (cd CardinalDirection) String() string {
@@ -55,5 +39,4 @@ func (cd CardinalDirection) String() string {
 	}
 	fmt.Printf("Unexpected: %d", cd)
 	panic("UNREACHABLE")
-	return "North"
 }

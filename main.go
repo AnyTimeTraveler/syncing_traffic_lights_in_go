@@ -53,7 +53,7 @@ func (t *TrafficLight) run(activeAxis Axis) {
 			<-t.controlChannel
 			debug("\t\t\t\t\t\t\t\t\t[%s] Got control!\n", t.cd)
 		}
-		activeAxis = activeAxis.next()
+		activeAxis.next()
 	}
 }
 
@@ -76,10 +76,10 @@ func (t *TrafficLight) sync() {
 	select {
 	case msg := <-t.syncChannel:
 		if !msg {
-			println("This should never happen")
+			panic("This should never happen")
 		}
 		debug("\t\t\t\t[%s] Synced!\n", t.cd)
 	case t.syncChannel <- true:
-		debug("\t\t\t\t[%s] Syncing...\n", t.cd)
+		debug("\t\t\t\t[%s] Synced!\n", t.cd)
 	}
 }

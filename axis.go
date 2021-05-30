@@ -9,16 +9,17 @@ const (
 	EWAxis      = 1
 )
 
-func (a Axis) next() Axis {
-	switch a {
+func (a *Axis) next() {
+	switch *a {
 	case NSAxis:
-		return EWAxis
+		*a = EWAxis
+		return
 	case EWAxis:
-		return NSAxis
+		*a = NSAxis
+		return
 	}
 	fmt.Printf("Unexpected: %s", a)
 	panic("UNREACHABLE")
-	return NSAxis
 }
 
 func (a Axis) String() string {
@@ -30,5 +31,4 @@ func (a Axis) String() string {
 	}
 	fmt.Printf("Unexpected: %d", a)
 	panic("UNREACHABLE")
-	return "NSAxis"
 }
